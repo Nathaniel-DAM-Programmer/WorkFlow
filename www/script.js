@@ -14,16 +14,16 @@ function actualizarVista() {
     elContenedor.innerHTML = "";
 
     listaDeJuegos.forEach(function(juego) {
-        // Formateamos la fecha para que se vea amigable en la tarjeta
-        const fechaFormateada = juego.fechaLimite ? new Date(juego.fechaLimite).toLocaleString() : "Sin fecha";
-
         elContenedor.innerHTML = elContenedor.innerHTML + `
             <article class="tarjeta-noticia ${juego.estilo}">
                 <button class="deleteBtn" onclick="eliminarJuego(${juego.id})">&times;</button>
-                <span class="categoria-etiqueta ${juego.estilo}">${juego.estilo}</span>
+                
+                <p class="texto-importancia">
+                    Importancia: <span class="valor-importancia ${juego.estilo}">${juego.estilo}</span>
+                </p>
+                
                 <h2 class="h_Noticias">${juego.titulo}</h2>
                 <p><strong>Lugar:</strong> ${juego.lugar}</p>
-                <p><strong>Límite:</strong> ${fechaFormateada}</p>
             </article>
         `;
     });

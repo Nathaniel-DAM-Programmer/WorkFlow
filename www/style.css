@@ -1,144 +1,217 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
+
+/* ESTILOS GENERALES */
 body {
-    font-family: 'Helvetica', Arial, sans-serif;
-    background-color: #f0f0f0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f8f9fa;
     margin: 0;
-    padding: 40px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
     align-items: center;
+    color: #333;
+    height: auto;
+    min-height: 100%;
+    overflow-y: auto; 
+    -webkit-overflow-scrolling: touch; 
 }
 
+/* CABECERA Y TÍTULO */
 .cabecera h1 {
-    border-top: 10px solid #ffcc00;
+    font-weight: 700;
+    font-size: 1.8rem;
+    text-align: center;
+    color: #2d3436;
+    margin-bottom: 30px;
     padding-top: 15px;
-    color: #111;
+    letter-spacing: -0.5px;
 }
 
+/* CONTENEDOR DEL FORMULARIO */
 .contenedor-formulario {
     background: white;
-    padding: 30px;
+    padding: 25px;
     width: 100%;
     max-width: 500px;
-    border-left: 5px solid #ffcc00;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    margin-bottom: 40px;
+    border-radius: 15px;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+    border: 1px solid #eee;
+    margin-bottom: 35px;
+    box-sizing: border-box; /* Para que el padding no rompa el ancho en móvil */
 }
 
 .bloque-videojuegos {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     display: flex;
     flex-direction: column;
 }
 
 .bloque-videojuegos label {
-    font-weight: bold;
-    margin-bottom: 5px;
+    font-weight: 600;
+    margin-bottom: 8px;
     font-size: 14px;
+    color: #555;
 }
 
-.bloque-videojuegos input{
-    padding: 10px;
-    border: 1px solid #ccc;
+.bloque-videojuegos input {
+    padding: 12px;
+    border: 2px solid #eee;
+    border-radius: 10px;
     font-size: 16px;
+    font-family: inherit;
+    transition: border-color 0.3s;
 }
 
-.bloque-videojuegos select {
-    padding: 10px;
-    border: 1px solid #ccc;
-    font-size: 16px;
+.bloque-videojuegos input:focus {
+    border-color: #ffcc00;
+    outline: none;
 }
-.boton-publicar {
+
+/* DISEÑO DEL SELECT (IMPORTANCIA) */
+select#genero {
     width: 100%;
     padding: 12px;
-    background-color: #111;
-    color: white;
-    border: none;
-    font-weight: bold;
+    border-radius: 10px;
+    border: 2px solid #eee;
+    background-color: #fff;
+    font-family: 'Poppins', sans-serif;
+    font-size: 15px;
+    appearance: none; /* Quita el estilo por defecto de Android/iOS */
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 15px;
     cursor: pointer;
+    transition: border-color 0.3s;
 }
 
-.boton-publicar:hover {
+select#genero:focus {
+    border-color: #ffcc00;
+    outline: none;
+}
+
+/* BOTÓN PUBLICAR */
+.boton-publicar {
+    width: 100%;
+    padding: 15px;
     background-color: #ffcc00;
     color: black;
+    border: none;
+    border-radius: 10px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s ease;
 }
 
+.boton-publicar:active {
+    transform: scale(0.96);
+}
 
-.lista-noticias {
+/* TÍTULO SECCIÓN TAREAS */
+.titulo-seccion {
+    font-weight: 600;
+    font-size: 1.4rem;
+    margin-bottom: 20px;
+    color: #636e72;
+    width: 100%;
+    max-width: 1100px;
+    text-align: left;
+}
+
+¡.lista-noticias {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 20px;
     width: 100%;
     max-width: 1100px;
+    padding-bottom: 100px;
 }
 
+/* TARJETAS DE TAREA */
 .tarjeta-noticia {
     background: white;
     padding: 25px;
-    border: 1px solid #ddd;
-    border-top: 5px solid #ffcc00;
+    border-radius: 15px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
     position: relative;
     display: flex;
     flex-direction: column;
+    border-top: 6px solid #ffcc00;
+    transition: transform 0.2s;
 }
 
-.categoria-etiqueta {
-    color: #ffcc00;
-    font-weight: bold;
-    font-size: 12px;
+/* Estilos dinámicos según importancia */
+.tarjeta-noticia.ALTA { border-top-color: #ff7675; 
+background-color: #ffeaea;}
+.tarjeta-noticia.MEDIA { border-top-color: #fdcb6e;
+background-color: #fff9e6; }
+.tarjeta-noticia.POCA { border-top-color: #55efc4; 
+background-color: #edfff9;}
+
+.texto-importancia {
+    font-weight: 600;
+    font-size: 13px;
     margin-bottom: 10px;
+    color: #555;
+    text-transform: uppercase;
 }
+
+.valor-importancia.ALTA {
+    color: #d63031;
+}
+
+.valor-importancia.MEDIA {
+    color: #e17055;
+}
+
+.valor-importancia.POCA {
+    color: #00b894; 
+}
+
+.categoria-etiqueta.ALTA { color: #d63031; }
+
+.categoria-etiqueta.MEDIA { color: #e17055; }
+
+.categoria-etiqueta.POCA { color: #00b894; }
 
 .h_Noticias {
-    font-size: 22px;
-    margin: 0 0 15px 0;
-    color: #000;
-    line-height: 1.2;
+    font-size: 20px;
+    margin: 0 0 10px 0;
+    color: #2d3436;
 }
-
-.tarjeta-noticia p {
-    color: #444;
-    font-size: 15px;
-    margin: 0;
-}
-
-/*Según el género, le pongo un color diferente para que se diferencien mejor*/
-.tarjeta-noticia.ALTA { border-top-color: #ff4444; }   
-.tarjeta-noticia.MEDIA { border-top-color: #fff944; } 
-.tarjeta-noticia.POCA { border-top-color: #2ecc71; }
-
-.categoria-etiqueta.ALTA { color: #ff4444; }
-.categoria-etiqueta.MEDIA { color: #e6ff44; }
-.categoria-etiqueta.POCA { color: #2ecc71; }
 
 .deleteBtn {
     position: absolute;
-    top: 5px;
-    right: 5px;
-    background: #eeeeee;
-    color: #333;
-    border: 1px solid #ccc;
+    top: 10px;
+    right: 10px;
+    background: #d10c0c;
+    border: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    font-size: 20px;
+    line-height: 30px;
     cursor: pointer;
-    font-size: 16px;
-    font-weight: bold;
-    padding: 2px 8px;
 }
 
-.deleteBtn:hover {
-    background: #ff4444; 
-    color: white;
-}
-/*Diseño responsive para móviles*/
+/* RESPONSIVE PARA MÓVILES */
 @media (max-width: 600px) {
     body {
         padding: 15px;
     }
     
-    .contenedor-formulario {
-        padding: 20px;
-        box-sizing: border-box;
+    .cabecera h1 {
+        font-size: 1.5rem;
     }
 
     .lista-noticias {
-        grid-template-columns: 1fr; /* Una sola columna en móviles */
+        grid-template-columns: 1fr; /* Una columna en móvil */
+    }
+
+    .contenedor-formulario {
+        padding: 20px;
     }
 }
