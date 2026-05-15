@@ -15,7 +15,12 @@ function actualizarVista() {
 
     listaDeJuegos.forEach(function(juego) {
         // Formateamos la fecha para que se vea bonita
-        const fechaFormateada = juego.fechaLimite ? new Date(juego.fechaLimite).toLocaleString() : "Sin fecha";
+        let fechaFormateada;
+        if (juego.fechaLimite) {
+            fechaFormateada = new Date(juego.fechaLimite).toLocaleString();
+        } else {
+            fechaFormateada = "Sin fecha";
+        }
 
         elContenedor.innerHTML = elContenedor.innerHTML + `
             <article class="tarjeta-noticia ${juego.estilo}">
@@ -34,12 +39,34 @@ function actualizarVista() {
     });
 }
 
-function eliminarJuego(id) {
+async function eliminarJuego(id) {
+    await cancelarRecordatorio(id);
+
     listaDeJuegos = listaDeJuegos.filter(function(juego) {
         return juego.id !== id;
     });
     localStorage.setItem("mis_juegos", JSON.stringify(listaDeJuegos));
     actualizarVista();
+}
+
+function obtenerIdsNotificacion(idTarea) {
+    return [idTarea * 10, idTarea * 10 + 1];
+}
+
+async function cancelarRecordatorio(idTarea) {
+    const ids = obtenerIdsNotificacion(idTarea);
+
+    try {
+        if (Capacitor && Capacitor.Plugins && Capacitor.Plugins.LocalNotifications) {
+            await Capacitor.Plugins.LocalNotifications.cancel({
+                notifications: ids.map(function(id) {
+                    return { id: id };
+                })
+            });
+        }
+    } catch (error) {
+        console.error("Error al cancelar notificaciones:", error);
+    }
 }
 
 elFormulario.addEventListener("submit", async function(evento) {
@@ -99,12 +126,13 @@ async function programarRecordatorio(tarea) {
 
     const fechaAvisoTresHoras = new Date(fechaLimite.getTime() - tresHoras);
     const fechaAvisoTresMinutos = new Date(fechaLimite.getTime() - tresMinutos);
+    const idsNotificacion = obtenerIdsNotificacion(tarea.id);
 
     if (fechaAvisoTresHoras > ahora) {
         notificaciones.push({
             title: "⏳ Aviso: quedan 3 horas",
             body: `Quedan 3 horas para: ${tarea.titulo}`,
-            id: Math.floor(Math.random() * 100000),
+            id: idsNotificacion[0],
             schedule: { at: fechaAvisoTresHoras },
             channelId: 'workflow-canal',
             smallIcon: 'ic_launcher_round',
@@ -116,7 +144,7 @@ async function programarRecordatorio(tarea) {
         notificaciones.push({
             title: "⏳ Aviso: quedan 3 minutos",
             body: `Quedan 3 minutos para: ${tarea.titulo}`,
-            id: Math.floor(Math.random() * 100000) + 100000,
+            id: idsNotificacion[1],
             schedule: { at: fechaAvisoTresMinutos },
             channelId: 'workflow-canal',
             smallIcon: 'ic_launcher_round',
