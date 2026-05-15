@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>lista juegos tarea</title>
+    <link rel="stylesheet" href="style.css">
+<script type="text/javascript" src="https://www3.gobiernodecanarias.org/educacion/cau_ce/estadisticasweb/scripts/piwik-eforma.js"></script><link rel="stylesheet" type="text/css" href="https://www3.gobiernodecanarias.org/educacion/cau_ce/estadisticasweb/scripts/cookies/cookies.css"/><script  type="text/javascript" src="https://www3.gobiernodecanarias.org/educacion/cau_ce/estadisticasweb/scripts/cookies/cookies.js"></script><script type="text/javascript" src="https://www3.gobiernodecanarias.org/educacion/cau_ce/estadisticasweb/scripts/cookies/cookies-html.js"></script></head>
+<body>
+
+    <div class="cabecera">
+        <h1>👾 ¿Qué cosas tengo que hacer? 🎮</h1>
+    </div>
+
+    <div class="contenedor-formulario">
+        <form id="formulario-juego">
+            <div class="bloque-videojuegos">
+                <label>Título del quehacer</label>
+                <input type="text" id="nombre" required placeholder="Ej: Tender la ropa">
+            </div>
+
+            <div class="bloque-videojuegos">
+                <label>Importancia:</label>
+                <select id="genero">
+                    <option value="POCA">POCA</option>
+                    <option value="MEDIA">MEDIA</option>
+                    <option value="ALTA">ALTA</option>
+                </select>
+            </div>
+
+            <div class="bloque-videojuegos">
+                <label>Lugar:</label>
+                <input type="text" id="lugar" required placeholder="Ej: Gimnasio">
+            </div>
+            <div class="bloque-videojuegos">
+                <label>Fecha y hora límite:</label>
+                <input type="datetime-local" id="fecha" required>
+            </div>
+
+            <button type="submit" class="boton-publicar">PUBLICAR TAREA</button>
+        </form>
+    </div>
+
+    <div class="divisor">
+        <h2>Tareas Añadidas:</h2>
+    </div>
+
+    <div id="contenedor-lista" class="lista-noticias"></div>
+
+    <script src="script.js"></script>
+</body>
+</html>

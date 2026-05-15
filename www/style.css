@@ -1,0 +1,144 @@
+body {
+    font-family: 'Helvetica', Arial, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.cabecera h1 {
+    border-top: 10px solid #ffcc00;
+    padding-top: 15px;
+    color: #111;
+}
+
+.contenedor-formulario {
+    background: white;
+    padding: 30px;
+    width: 100%;
+    max-width: 500px;
+    border-left: 5px solid #ffcc00;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    margin-bottom: 40px;
+}
+
+.bloque-videojuegos {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.bloque-videojuegos label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    font-size: 14px;
+}
+
+.bloque-videojuegos input{
+    padding: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+
+.bloque-videojuegos select {
+    padding: 10px;
+    border: 1px solid #ccc;
+    font-size: 16px;
+}
+.boton-publicar {
+    width: 100%;
+    padding: 12px;
+    background-color: #111;
+    color: white;
+    border: none;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.boton-publicar:hover {
+    background-color: #ffcc00;
+    color: black;
+}
+
+
+.lista-noticias {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+    width: 100%;
+    max-width: 1100px;
+}
+
+.tarjeta-noticia {
+    background: white;
+    padding: 25px;
+    border: 1px solid #ddd;
+    border-top: 5px solid #ffcc00;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.categoria-etiqueta {
+    color: #ffcc00;
+    font-weight: bold;
+    font-size: 12px;
+    margin-bottom: 10px;
+}
+
+.h_Noticias {
+    font-size: 22px;
+    margin: 0 0 15px 0;
+    color: #000;
+    line-height: 1.2;
+}
+
+.tarjeta-noticia p {
+    color: #444;
+    font-size: 15px;
+    margin: 0;
+}
+
+/*Según el género, le pongo un color diferente para que se diferencien mejor*/
+.tarjeta-noticia.ALTA { border-top-color: #ff4444; }   
+.tarjeta-noticia.MEDIA { border-top-color: #fff944; } 
+.tarjeta-noticia.POCA { border-top-color: #2ecc71; }
+
+.categoria-etiqueta.ALTA { color: #ff4444; }
+.categoria-etiqueta.MEDIA { color: #e6ff44; }
+.categoria-etiqueta.POCA { color: #2ecc71; }
+
+.deleteBtn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: #eeeeee;
+    color: #333;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 2px 8px;
+}
+
+.deleteBtn:hover {
+    background: #ff4444; 
+    color: white;
+}
+/*Diseño responsive para móviles*/
+@media (max-width: 600px) {
+    body {
+        padding: 15px;
+    }
+    
+    .contenedor-formulario {
+        padding: 20px;
+        box-sizing: border-box;
+    }
+
+    .lista-noticias {
+        grid-template-columns: 1fr; /* Una sola columna en móviles */
+    }
+}
