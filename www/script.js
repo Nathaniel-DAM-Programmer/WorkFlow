@@ -34,20 +34,47 @@ function actualizarVista() {
     });
 }
 
+function eliminarJuego(id) {
+    listaDeJuegos = listaDeJuegos.filter(function(juego) {
+        return juego.id !== id;
+    });
+    localStorage.setItem("mis_juegos", JSON.stringify(listaDeJuegos));
+    actualizarVista();
+}
+
 elFormulario.addEventListener("submit", async function(evento) {
     evento.preventDefault();
 
-    const valorNombre = document.getElementById("nombre").value;
+    const valorNombre = document.getElementById("nombre").value.trim();
     const valorGenero = document.getElementById("genero").value;
-    const valorPlataforma = document.getElementById("lugar").value;
-    const valorFecha = document.getElementById("fecha").value; 
+    const valorPlataforma = document.getElementById("lugar").value.trim();
+    const valorFecha = document.getElementById("fecha").value;
+
+    const fechaLimite = new Date(valorFecha);
+    const ahora = new Date();
+    const cincoMinutos = 5 * 60 * 1000;
+
+    if (!valorFecha || isNaN(fechaLimite.getTime())) {
+        alert("La fecha y hora no son válidas. Por favor elige una fecha y hora correctas.");
+        return;
+    }
+
+    if (fechaLimite <= ahora) {
+        alert("La fecha y hora deben ser futuras. Elige una fecha que aún no haya pasado.");
+        return;
+    }
+
+    if (fechaLimite.getTime() - ahora.getTime() < cincoMinutos) {
+        alert("El plazo mínimo es de 5 minutos. Elige una fecha que esté al menos 5 minutos en el futuro.");
+        return;
+    }
 
     const nuevoJuego = {
-        id: Math.floor(Math.random() * 1000000), 
+        id: Math.floor(Math.random() * 1000000),
         titulo: valorNombre,
         estilo: valorGenero,
         lugar: valorPlataforma,
-        fechaLimite: valorFecha
+        fechaLimite: fechaLimite.toISOString()
     };
 
     listaDeJuegos.push(nuevoJuego);
@@ -62,50 +89,72 @@ elFormulario.addEventListener("submit", async function(evento) {
 async function programarRecordatorio(tarea) {
     if (!tarea.fechaLimite) return;
 
-    const fechaNotificacion = new Date(tarea.fechaLimite);
+    const fechaLimite = new Date(tarea.fechaLimite);
+    const ahora = new Date();
+    const tresHoras = 3 * 60 * 60 * 1000;
+    const tresMinutos = 3 * 60 * 1000;
+    const notificaciones = [];
 
-    if (fechaNotificacion > new Date()) {
-        try {
-            
-            const permiso = await Capacitor.Plugins.LocalNotifications.requestPermissions();
-            
-            if (permiso.display === 'granted') {
-                await Capacitor.Plugins.LocalNotifications.schedule({
-                    notifications: [
-                        {
-                            title: "¡Workflow Alert!",
-                            body: `Es hora de: ${tarea.titulo}`,
-                            id: tarea.id,
-                            schedule: { at: fechaNotificacion },
-                            sound: null
-                        }
-                    ]
-                });
-                alert("Notificación programada para las: " + fechaNotificacion.toLocaleString());
-            }
-        } catch (error) {
-            console.error("Error al programar:", error);
-        }
-    } else {
-        alert("La fecha seleccionada ya pasó. Elige una hora futura.");
-    }
-}
+    if (isNaN(fechaLimite.getTime())) return;
 
-function eliminarJuego(idABuscar) {
-    listaDeJuegos = listaDeJuegos.filter(function(item) {
-        return item.id !== idABuscar;
-    });
-    localStorage.setItem("mis_juegos", JSON.stringify(listaDeJuegos));
-    cancelarNotificacion(idABuscar);
-    actualizarVista();
-}
+    const fechaAvisoTresHoras = new Date(fechaLimite.getTime() - tresHoras);
+    const fechaAvisoTresMinutos = new Date(fechaLimite.getTime() - tresMinutos);
 
-async function cancelarNotificacion(id) {
-    try {
-        await Capacitor.Plugins.LocalNotifications.cancel({
-            notifications: [{ id: id }]
+    if (fechaAvisoTresHoras > ahora) {
+        notificaciones.push({
+            title: "⏳ Aviso: quedan 3 horas",
+            body: `Quedan 3 horas para: ${tarea.titulo}`,
+            id: Math.floor(Math.random() * 100000),
+            schedule: { at: fechaAvisoTresHoras },
+            channelId: 'workflow-canal',
+            smallIcon: 'ic_launcher_round',
+            actionTypeId: ''
         });
-    } catch (e) {
-        console.log("No había notificación.");
+    }
+
+    if (fechaAvisoTresMinutos > ahora) {
+        notificaciones.push({
+            title: "⏳ Aviso: quedan 3 minutos",
+            body: `Quedan 3 minutos para: ${tarea.titulo}`,
+            id: Math.floor(Math.random() * 100000) + 100000,
+            schedule: { at: fechaAvisoTresMinutos },
+            channelId: 'workflow-canal',
+            smallIcon: 'ic_launcher_round',
+            actionTypeId: ''
+        });
+    }
+
+    if (notificaciones.length === 0) return;
+
+    try {
+        let permisos = await Capacitor.Plugins.LocalNotifications.checkPermissions();
+        if (permisos.display !== 'granted') {
+            permisos = await Capacitor.Plugins.LocalNotifications.requestPermissions();
+        }
+
+        if (permisos.display === 'granted') {
+            await Capacitor.Plugins.LocalNotifications.createChannel({
+                id: 'workflow-canal',
+                name: 'Avisos de Tareas',
+                description: 'Canal para recordatorios de Workflow',
+                importance: 5,
+                visibility: 1
+            });
+
+            await Capacitor.Plugins.LocalNotifications.schedule({
+                notifications: notificaciones
+            });
+
+            const mensajesProgramados = notificaciones.map(n => {
+                const hora = n.schedule.at.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                return `${n.title.replace('⏳ ', '')} a las ${hora}`;
+            });
+
+            alert("Notificaciones programadas: " + mensajesProgramados.join(' y ') + ".");
+        } else {
+            alert("No puedo avisarte porque no aceptaste las notificaciones.");
+        }
+    } catch (error) {
+        console.error("Fallo crítico en notificaciones:", error);
     }
 }
